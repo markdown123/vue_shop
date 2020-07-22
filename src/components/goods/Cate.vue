@@ -96,7 +96,7 @@
             :props="cascaderProps"
             @change="parentCateChanged"
             clearable
-            chang-on-select
+            change-on-select
           ></el-cascader>
         </el-form-item>
       </el-form>
@@ -164,7 +164,7 @@ export default {
       },
       // 父级分类的列表
       parentCateList: [],
-      // 指定级联选择器
+      // 指定级联选择器对象
       cascaderProps: {
         expandTrigger: 'hover',
         value: 'cat_id',
@@ -219,11 +219,13 @@ export default {
     },
     // 选择变化时触发该函数
     parentCateChanged() {
-      
+      console.log(this.selectedKeys);      
       if (this.selectedKeys.length > 0) {
+        // 更新该分类的父级id
         this.addCateForm.cat_pid = this.selectedKeys[
           this.selectedKeys.length - 1
         ]
+        // 更新该分类的等级
         this.addCateForm.cat_level = this.selectedKeys.length
         return
       } else {
@@ -233,16 +235,26 @@ export default {
       }
     },
     // 点击按钮，添加新的分类
-    addCate(){
-      console.log(this.addCateForm);
-    },
+     addCate(){
+      this.$refs.addCateFormRef.validate(async valid=>{
+        if(!valid) return
+       const {data:res} = await this.$http.post('categories',this.addCateForm)
+       if(res.meta.status !== 201) return this.$message.error('添加分类失败')
+
+       this.$message.success('添加分类成功')
+       this.getCatesList()
+       this.addCateDialogVisible = false
+      })
+},
+    // 监听对话框的关闭事件，重置表单数据
     addCateDialogClosed(){
-      this.$refs.addCateFormRef.resetFileds()
+      this.$refs.addCateFormRef.resetFields()
       this.selectedKeys = []
       this.addCateForm.cat_level = 0
       this.addCateForm.cat_pid = 0
       
-    }
+    },
+
   }
 }
 </script>
