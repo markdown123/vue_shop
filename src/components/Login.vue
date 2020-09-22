@@ -64,6 +64,7 @@ export default {
       this.$refs.loginFormRef.resetFields()
     },
     login() {
+      console.log('jjjjj');
       // 表单引用对象的valid验证方法，返回布尔值valid
       this.$refs.loginFormRef.validate(async valid => {
         // 判断是否要进行请求

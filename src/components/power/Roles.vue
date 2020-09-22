@@ -49,7 +49,7 @@
                   <el-col :span="18">
                     <el-tag
                       type="warning"
-                      v-for="(item3,i3) in item2.children"
+                      v-for="(item3) in item2.children"
                       :key="item3.id"
                       closable
                       @close="removeRightById(scope.row,item3.id)"
@@ -227,6 +227,7 @@ export default {
       if (res.meta.status !== 200)
         return this.$message.error('获取角色列表失败')
       this.rolesList = res.data
+  
     },
    
     // 根据id删除对应的权限
